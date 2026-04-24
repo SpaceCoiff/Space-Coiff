@@ -295,7 +295,9 @@ Heure🕐: ${heure}`;
 
         const phone = "212661137243"; // 👉 change ton numéro
         
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+        const waLink = document.getElementById("waLink");
+waLink.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+waLink.click();
 
         alert("✅ Réservation enregistrée !");
         
@@ -321,7 +323,7 @@ Heure🕐: ${heure}`;
         alert("❌ Erreur Firebase");
     }
 };
-
+<a id="waLink" style="display:none;" target="_blank"></a>
 </script>
 
 </body>
