@@ -12,18 +12,19 @@ body {
     display: flex;
     justify-content: center;
     padding: 20px;
+    margin:0;
 }
-
 .container {
     background: white;
-    width: 380px;
+    width: 100%;
+    max-width: 380px;
     padding: 20px;
     border-radius: 20px;
 }
 .logo {
     display: block;
     margin: 0 auto 15px auto;
-    width: 140px;   /* taille du logo */
+    width: 140px;
     height: auto;
 }
 h2 { text-align:center; }
@@ -34,6 +35,7 @@ input, select {
     margin-top: 8px;
     border-radius: 10px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 .section { margin-bottom: 15px; }
@@ -91,6 +93,10 @@ button.submit {
     border:none;
     border-radius:10px;
 }
+
+* {
+    box-sizing: border-box;
+}
 </style>
 </head>
 
@@ -98,20 +104,20 @@ button.submit {
 
 <div class="container">
 
-
 <img src="logo_space_coiff.png" class="logo">
+
 <!-- CLIENT -->
 <div class="section">
 <input id="nom" placeholder="Nom" required>
-<input id="prenom" placeholder="Prénom"required>
-<input id="email" placeholder="Email"required>
-<input id="tel" placeholder="Téléphone"required>
+<input id="prenom" placeholder="Prénom" required>
+<input id="email" placeholder="Email" required>
+<input id="tel" placeholder="Téléphone" required>
 </div>
 
 <!-- SERVICES -->
 <div class="section">
 <b>Services</b>
-<div class="buttons"required>
+<div class="buttons">
 <button class="option">Coiffure</button>
 <button class="option">Coloration</button>
 <button class="option">Soins</button>
@@ -120,15 +126,12 @@ button.submit {
 
 <!-- CALENDRIER -->
 <div class="section">
-
 <div class="calendar-header">
 <button onclick="prevMonth()">◀</button>
 <strong id="monthLabel"></strong>
 <button onclick="nextMonth()">▶</button>
 </div>
-
 <div id="calendar" class="calendar-grid"></div>
-
 </div>
 
 <!-- HEURE -->
@@ -163,17 +166,17 @@ button.submit {
 <option>22:00</option>
 <option>22:30</option>
 <option>23:00</option>
-
 </select>
 </div>
 
 <button class="submit" onclick="reserver()">Réserver</button>
 
-</div>
+<!-- Lien invisible pour WhatsApp -->
+<a id="waLink" style="display:none;" target="_blank"></a>
 
-<!-- FIREBASE + LOGIQUE -->
+</div> <!-- fin container -->
+
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -205,10 +208,8 @@ const months = [
 ];
 
 function renderCalendar() {
-
     const calendar = document.getElementById("calendar");
     const monthLabel = document.getElementById("monthLabel");
-
     calendar.innerHTML = "";
 
     const year = currentDate.getFullYear();
@@ -226,7 +227,6 @@ function renderCalendar() {
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-
         const day = document.createElement("div");
         day.className = "day";
         day.innerText = d;
@@ -245,7 +245,6 @@ window.nextMonth = () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar();
 };
-
 window.prevMonth = () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar();
@@ -255,7 +254,6 @@ renderCalendar();
 
 /* RESERVATION + FIREBASE + WHATSAPP */
 window.reserver = async function() {
-
     const nom = document.getElementById("nom").value;
     const prenom = document.getElementById("prenom").value;
     const email = document.getElementById("email").value;
@@ -274,56 +272,40 @@ window.reserver = async function() {
     try {
         // FIREBASE
         await addDoc(collection(db, "reservations"), {
-            nom,
-            prenom,
-            email,
-            tel,
-            services,
-            date: selectedDate,
-            heure,
-            createdAt: new Date()
+            nom, prenom, email, tel, services, date: selectedDate, heure, createdAt: new Date()
         });
 
-        // WHATSAPP
-        const message =
-`Nouvelle réservation Space Coiff✅ :
-Nom: ${nom} ${prenom}
-Tel📞: ${tel}
-Service💇: ${services}
-Date📅: ${selectedDate}
-Heure🕐: ${heure}`;
-
-        const phone = "212661137243"; // 👉 change ton numéro
-        
-        const waLink = document.getElementById("waLink");
-waLink.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
-waLink.click();
-
-        alert("✅ Réservation enregistrée !");
-        
-                // RESET FORMULAIRE
+        // RESET FORMULAIRE
         document.getElementById("nom").value = "";
         document.getElementById("prenom").value = "";
         document.getElementById("email").value = "";
         document.getElementById("tel").value = "";
-
         document.getElementById("heure").selectedIndex = 0;
-
-        // reset services
-        document.querySelectorAll(".option.active")
-            .forEach(el => el.classList.remove("active"));
-
-        // reset calendrier
-        document.querySelectorAll(".day.selected")
-            .forEach(el => el.classList.remove("selected"));
-
+        document.querySelectorAll(".option.active").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".day.selected").forEach(el => el.classList.remove("selected"));
+        const messageDate = selectedDate; // sauvegarde avant reset
         selectedDate = null;
-    } catch (e) {
+
+        alert("✅ Réservation enregistrée !");
+
+        // WHATSAPP
+        const phone = "212661137243";
+        const message = `Nouvelle réservation Space Coiff✅ :
+Nom: ${nom} ${prenom}
+Tel📞: ${tel}
+Service💇: ${services}
+Date📅: ${messageDate}
+Heure🕐: ${heure}`;
+
+        const waLink = document.getElementById("waLink");
+        waLink.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+        waLink.click();
+
+    } catch(e) {
         console.error(e);
         alert("❌ Erreur Firebase");
     }
 };
-<a id="waLink" style="display:none;" target="_blank"></a>
 </script>
 
 </body>
