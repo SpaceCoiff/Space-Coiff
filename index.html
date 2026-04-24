@@ -8,31 +8,28 @@
 body { font-family: Arial; background:#f3f3f3; margin:0; }
 header { background:#000; color:#fff; text-align:center; padding:20px; font-weight:bold;}
 .container { max-width:400px; margin:20px auto; background:#fff; padding:20px; border-radius:20px; position:relative; }
-.container::before {
-    content:'';
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:120px;
+
+/* Logo en haut */
+.logo {
+    display:block;
+    margin:0 auto 15px;
+    width:140px;
     height:auto;
-    background:url('logo_space_coiff.png') no-repeat center center;
-    background-size:contain;
-    opacity:0.1;
-    pointer-events:none;
-    z-index:0;
 }
-.container * { position:relative; z-index:1; }
 
 input, select, button { width:100%; padding:10px; margin:5px 0; border-radius:10px; border:1px solid #ccc; }
 button.submit { background:#000; color:#fff; border:none; cursor:pointer; }
 
 .buttons { display:flex; gap:10px; flex-wrap:wrap; margin:5px 0; }
 .option {
-    padding:8px 12px; border-radius:20px; border:none;
-    background:#000; color:#fff; cursor:pointer; /* initial noir */
+    padding:8px 12px;
+    border-radius:20px;
+    border:none;
+    background:#fff; /* blanc initial */
+    color:#000;       /* texte noir initial */
+    cursor:pointer;
 }
-.option.active { background:#ccc; color:#000; } /* devient gris après sélection */
+.option.active { background:#000; color:#fff; } /* noir + texte blanc après sélection */
 
 .calendar-header { display:flex; justify-content:space-between; align-items:center; margin:10px 0; }
 .calendar-header button { padding:5px 10px; font-size:0.9em; background:#ccc; border:none; cursor:pointer; color:#000; border-radius:5px; }
@@ -48,6 +45,9 @@ button.submit { background:#000; color:#fff; border:none; cursor:pointer; }
 <header>Space Coiff - Réservez Votre Créneau</header>
 
 <div class="container">
+
+<!-- Logo en haut -->
+<img src="logo_space_coiff.png" class="logo">
 
 <input id="nom" placeholder="Nom">
 <input id="prenom" placeholder="Prénom">
@@ -75,7 +75,6 @@ button.submit { background:#000; color:#fff; border:none; cursor:pointer; }
 </select>
 
 <button class="submit" onclick="reserver()">Réserver</button>
-
 <a id="waLink" style="display:none;" target="_blank"></a>
 
 </div>
@@ -95,9 +94,7 @@ const db = getFirestore(app);
 
 // Services
 document.querySelectorAll(".option").forEach(btn=>{
-    btn.onclick=()=>{
-        btn.classList.toggle("active"); // toggle entre noir/gris
-    };
+    btn.onclick=()=> btn.classList.toggle("active");
 });
 
 // Calendrier
@@ -191,15 +188,17 @@ Service: ${services}
 Date: ${selectedDate}
 Heure: ${heure}`;
 
+    // WhatsApp
     const waLink=document.getElementById("waLink");
     waLink.href=`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
     waLink.click();
 
+    // Firebase
     await addDoc(collection(db,"reservations"),{
         nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date()
     });
 
-    // Reset formulaire
+    // Reset
     document.getElementById("nom").value="";
     document.getElementById("prenom").value="";
     document.getElementById("email").value="";
@@ -213,6 +212,5 @@ Heure: ${heure}`;
     renderCalendar();
 };
 </script>
-
 </body>
 </html>
