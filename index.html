@@ -20,30 +20,12 @@ header {
     font-weight: bold;
 }
 .container {
-    position: relative; /* nécessaire pour que le pseudo-élément soit positionné dessus */
     max-width: 400px;
     margin: 20px auto;
-    background: #fff; /* couleur de fond */
+    background: #fff;
     padding: 20px;
     border-radius: 20px;
-    overflow: hidden; /* pour que l'image ne dépasse pas */
 }
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: 50%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 120px; /* taille du logo */
-    height: auto;
-    background: url('logo_space_coiff.png') no-repeat center center;
-    background-size: contain;
-    opacity: 0.1; /* discrétion */
-    pointer-events: none; /* le logo ne gêne pas le clic sur les champs */
-    z-index: 0; /* derrière le texte et les inputs */
-}
-
 /* tout le contenu au-dessus du pseudo-élément */
 .container * {
     position: relative;
