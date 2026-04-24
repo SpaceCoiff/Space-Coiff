@@ -295,8 +295,7 @@ Heure🕐: ${heure}`;
 
         const phone = "212661137243"; // 👉 change ton numéro
 
-        window.open(
-            `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+       window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
         );
 
         alert("✅ Réservation enregistrée !");
