@@ -25,19 +25,29 @@ header {
     background: #fff;
     padding: 20px;
     border-radius: 20px;
+    position: relative;
+    overflow: hidden;
 }
-/* tout le contenu au-dessus du pseudo-élément */
+/* Logo en arrière-plan */
+.container::before {
+    content:'';
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:120px;
+    height:auto;
+    background: url('logo_space_coiff.png') no-repeat center center;
+    background-size: contain;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
 .container * {
     position: relative;
     z-index: 1;
 }
-}
-.logo {
-    display: block;
-    margin: 0 auto 15px auto;
-    width: 140px;
-    height: auto;
-}
+
 input, select, button {
     width: 100%;
     padding: 10px;
@@ -101,9 +111,6 @@ button.submit {
 
 <div class="container">
 
-<!-- LOGO -->
-<img src="logo_space_coiff.png" class="logo">
-
 <!-- FORMULAIRE CLIENT -->
 <div class="section">
 <input id="nom" placeholder="Nom" required>
@@ -150,6 +157,7 @@ button.submit {
 
 <button class="submit" onclick="reserver()">Réserver</button>
 
+<!-- Lien invisible pour WhatsApp -->
 <a id="waLink" style="display:none;" target="_blank"></a>
 
 </div> <!-- container -->
@@ -267,8 +275,6 @@ window.reserver = async function() {
         const messageDate = selectedDate;
         selectedDate=null;
 
-        alert("✅ Réservation enregistrée !");
-
         // WhatsApp
         const phone = "212661137243";
         const message = `Nouvelle réservation Space Coiff✅ :
@@ -281,8 +287,12 @@ Heure🕐: ${heure}`;
         waLink.href=`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
         waLink.click();
 
+        // Mettre à jour les jours bloqués
         await loadBlockedDates();
         renderCalendar();
+
+        // Optionnel : message de confirmation après WhatsApp
+        setTimeout(()=>{ alert("✅ Réservation enregistrée !"); }, 500);
 
     }catch(e){
         console.error(e);
