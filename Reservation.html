@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Space Coiff</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    width: 380px;
+    padding: 20px;
+    border-radius: 20px;
+}
+.logo {
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 140px;   /* taille du logo */
+    height: auto;
+}
+h2 { text-align:center; }
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.section { margin-bottom: 15px; }
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.option {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+}
+
+.option.active {
+    background: black;
+    color: white;
+}
+
+/* CALENDRIER */
+.calendar-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.calendar-grid {
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:5px;
+}
+
+.day {
+    padding:10px;
+    text-align:center;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.day.selected {
+    background:black;
+    color:white;
+}
+
+button.submit {
+    width:100%;
+    padding:12px;
+    background:black;
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<img src="logo_space_coiff.png" class="logo">
+
+<!-- CLIENT -->
+<div class="section">
+<input id="nom" placeholder="Nom" required>
+<input id="prenom" placeholder="Prénom"required>
+<input id="email" placeholder="Email"required>
+<input id="tel" placeholder="Téléphone"required>
+</div>
+
+<!-- SERVICES -->
+<div class="section">
+<b>Services</b>
+<div class="buttons"required>
+<button class="option">Coiffure</button>
+<button class="option">Coloration</button>
+<button class="option">Soins</button>
+</div>
+</div>
+
+<!-- CALENDRIER -->
+<div class="section">
+
+<div class="calendar-header">
+<button onclick="prevMonth()">◀</button>
+<strong id="monthLabel"></strong>
+<button onclick="nextMonth()">▶</button>
+</div>
+
+<div id="calendar" class="calendar-grid"></div>
+
+</div>
+
+<!-- HEURE -->
+<div class="section">
+<select id="heure">
+<option>09:00</option>
+<option>09:30</option>
+<option>10:00</option>
+<option>10:30</option>
+<option>11:00</option>
+<option>11:30</option>
+<option>12:00</option>
+<option>12:30</option>
+<option>13:00</option>
+<option>13:30</option>
+<option>14:00</option>
+<option>14:30</option>
+<option>15:00</option>
+<option>15:30</option>
+<option>16:00</option>
+<option>16:30</option>
+<option>17:00</option>
+<option>17:30</option>
+<option>18:00</option>
+<option>18:30</option>
+<option>19:00</option>
+<option>19:30</option>
+<option>20:00</option>
+<option>20:30</option>
+<option>21:00</option>
+<option>21:30</option>
+<option>22:00</option>
+<option>22:30</option>
+<option>23:00</option>
+
+</select>
+</div>
+
+<button class="submit" onclick="reserver()">Réserver</button>
+
+</div>
+
+<!-- FIREBASE + LOGIQUE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyABAx8rHzrQDCx-DLjW0aVJsh1iA_SBadY",
+  authDomain: "space-coiff.firebaseapp.com",
+  projectId: "space-coiff",
+  storageBucket: "space-coiff.firebasestorage.app",
+  messagingSenderId: "49720238478",
+  appId: "1:49720238478:web:45ebdd95768380a49a04df"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* SERVICES */
+document.querySelectorAll(".option").forEach(btn => {
+    btn.onclick = () => btn.classList.toggle("active");
+});
+
+/* CALENDRIER */
+let currentDate = new Date();
+let selectedDate = null;
+
+const months = [
+"Janvier","Février","Mars","Avril","Mai","Juin",
+"Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+];
+
+function renderCalendar() {
+
+    const calendar = document.getElementById("calendar");
+    const monthLabel = document.getElementById("monthLabel");
+
+    calendar.innerHTML = "";
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    monthLabel.innerText = months[month] + " " + year;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const start = firstDay === 0 ? 6 : firstDay - 1;
+
+    for (let i = 0; i < start; i++) {
+        calendar.innerHTML += "<div></div>";
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+
+        const day = document.createElement("div");
+        day.className = "day";
+        day.innerText = d;
+
+        day.onclick = () => {
+            document.querySelectorAll(".day").forEach(el => el.classList.remove("selected"));
+            day.classList.add("selected");
+            selectedDate = `${d}/${month+1}/${year}`;
+        };
+
+        calendar.appendChild(day);
+    }
+}
+
+window.nextMonth = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+};
+
+window.prevMonth = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+};
+
+renderCalendar();
+
+/* RESERVATION + FIREBASE + WHATSAPP */
+window.reserver = async function() {
+
+    const nom = document.getElementById("nom").value;
+    const prenom = document.getElementById("prenom").value;
+    const email = document.getElementById("email").value;
+    const tel = document.getElementById("tel").value;
+    const heure = document.getElementById("heure").value;
+
+    const services = [...document.querySelectorAll(".option.active")]
+        .map(e => e.innerText)
+        .join(", ");
+
+    if (!nom || !prenom || !tel || !selectedDate) {
+        alert("Remplis tous les champs !");
+        return;
+    }
+
+    try {
+        // FIREBASE
+        await addDoc(collection(db, "reservations"), {
+            nom,
+            prenom,
+            email,
+            tel,
+            services,
+            date: selectedDate,
+            heure,
+            createdAt: new Date()
+        });
+
+        // WHATSAPP
+        const message =
+`Nouvelle réservation Space Coiff✅ :
+Nom: ${nom} ${prenom}
+Tel📞: ${tel}
+Service💇: ${services}
+Date📅: ${selectedDate}
+Heure🕐: ${heure}`;
+
+        const phone = "212661137243"; // 👉 change ton numéro
+
+        window.open(
+            `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+        );
+
+        alert("✅ Réservation enregistrée !");
+                // RESET FORMULAIRE
+        document.getElementById("nom").value = "";
+        document.getElementById("prenom").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("tel").value = "";
+
+        document.getElementById("heure").selectedIndex = 0;
+
+        // reset services
+        document.querySelectorAll(".option.active")
+            .forEach(el => el.classList.remove("active"));
+
+        // reset calendrier
+        document.querySelectorAll(".day.selected")
+            .forEach(el => el.classList.remove("selected"));
+
+        selectedDate = null;
+    } catch (e) {
+        console.error(e);
+        alert("❌ Erreur Firebase");
+    }
+};
+
+</script>
+
+</body>
+</html>
