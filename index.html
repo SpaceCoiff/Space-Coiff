@@ -272,8 +272,8 @@ Service💇: ${services}
 Date📅: ${messageDate}
 Heure🕐: ${heure}`;
         const waLink = document.getElementById("waLink");
-        waLink.href=`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
-        waLink.click();
+       const url = https://wa.me/${phone}?text=${encodeURIComponent(message)};
+window.open(url, "_blank");
 
         await loadBlockedDates();
         renderCalendar();
