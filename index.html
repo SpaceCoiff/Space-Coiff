@@ -38,11 +38,19 @@ header {
     height:auto;
 }
 
+/* Labels */
+label {
+    display:block;
+    font-weight:bold;
+    margin-top:10px;
+    margin-bottom:5px;
+}
+
 /* Form inputs */
 input, select {
-    width:calc(100% - 20px); /* padding interne */
+    width:calc(100% - 20px);
     padding:10px;
-    margin:8px 0;
+    margin:5px 0;
     border-radius:12px;
     border:1px solid #000;
     transition:0.3s;
@@ -52,14 +60,6 @@ input:focus, select:focus {
     border-color:#000;
     box-shadow:0 0 5px rgba(0,0,0,0.2);
     outline:none;
-}
-
-/* Labels pour sections */
-.section-title {
-    font-weight:bold;
-    margin-top:15px;
-    margin-bottom:5px;
-    display:block;
 }
 
 /* Buttons services */
@@ -128,6 +128,12 @@ button.submit {
     transition:all 0.3s ease;
 }
 button.submit:hover { background:#222; transform:scale(1.02);}
+.section-title {
+    font-weight:bold;
+    margin-top:15px;
+    margin-bottom:5px;
+    display:block;
+}
 </style>
 </head>
 <body>
@@ -138,12 +144,16 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 
 <img src="logo_space_coiff.png" class="logo">
 
+<label for="nom">Nom</label>
 <input id="nom" placeholder="Nom">
+<label for="prenom">Prénom</label>
 <input id="prenom" placeholder="Prénom">
+<label for="email">Email</label>
 <input id="email" placeholder="Email">
+<label for="tel">Téléphone</label>
 <input id="tel" placeholder="Téléphone">
 
-<b>Services</b>
+<span class="section-title">Services :</span>
 <div class="buttons">
 <button class="option">Coiffure</button>
 <button class="option">Coloration</button>
@@ -174,7 +184,6 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyABAx8rHzrQDCx-DLjW0aVJsh1iA_SBadY",
   authDomain: "space-coiff.firebaseapp.com",
@@ -285,7 +294,6 @@ Heure: ${heure}`;
         nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date()
     });
 
-    // Reset
     document.getElementById("nom").value="";
     document.getElementById("prenom").value="";
     document.getElementById("email").value="";
