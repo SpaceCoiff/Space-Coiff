@@ -314,7 +314,7 @@ function validateForm(){
     if(!prenom.value.trim()){ document.getElementById("error-prenom").style.display="block"; prenom.classList.add("error"); valid=false; }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(!emailRegex.test(email.value)){ document.getElementById("error-email").style.display="block"; email.classList.add("error"); valid=false; }
-    const telRegex = /^\+212\d{9}$/;
+    const telRegex = /^(\+212|0)[6-7]\d{8}$/;
     if(!telRegex.test(tel.value)){ document.getElementById("error-tel").style.display="block"; tel.classList.add("error"); valid=false; }
     return valid;
 }
