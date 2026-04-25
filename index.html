@@ -27,7 +27,6 @@ select option:checked { color:#000; background:#f0f0f0; }
 .calendar-grid .day { padding:14px; text-align:center; border-radius:50%; cursor:pointer; transition:all 0.3s ease; background:#f9f9f9; box-shadow:0 1px 3px rgba(0,0,0,0.1); font-size:1em; color:#555; }
 .calendar-grid .day:hover { background:#eee; color:#000; transform:scale(1.05); }
 .calendar-grid .day.selected { background:#000; color:#fff; transform:scale(1.15); box-shadow:0 4px 10px rgba(0,0,0,0.2);}
-.calendar-grid .day.blocked { background:#ccc; cursor:not-allowed; color:#666;}
 button.submit { background:#000; color:#fff; border:none; border-radius:20px; padding:18px; font-weight:bold; font-size:1.3em; margin-top:20px; cursor:pointer; transition:all 0.3s ease; width:100%; }
 button.submit:hover { background:#222; transform:scale(1.05);}
 #confirmation { display:none; margin-top:15px; padding:12px; background:#d4edda; color:#155724; border-radius:12px; font-weight:bold; text-align:center; }
@@ -98,13 +97,14 @@ document.querySelectorAll(".option").forEach(btn=>{ btn.onclick=()=> btn.classLi
 let currentDate = new Date();
 let selectedDate = null;
 const months=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-const horaires = ["10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"];
+const horaires = ["09:00","09:30,"10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"];
 
 async function loadReservations(){ 
     const res = await getDocs(collection(db,"reservations"));
     return res.docs.map(doc=>doc.data());
 }
 
+// Fonction pour mettre à jour uniquement les horaires déjà pris pour la date sélectionnée
 async function renderHours(){ 
     const heureSelect = document.getElementById("heure");
     heureSelect.innerHTML="";
@@ -133,26 +133,18 @@ async function renderCalendar(){
     label.innerText = months[m]+" "+y;
     const first=new Date(y,m,1).getDay();
     const days=new Date(y,m+1,0).getDate();
-    const start = first===0?6:first-1;
-    const reservations = await loadReservations();
-    for(let i=0;i<start;i++) cal.innerHTML+="<div></div>";
+    for(let i=0;i<(first===0?6:first-1);i++) cal.innerHTML+="<div></div>";
     for(let d=1; d<=days; d++){
         const el=document.createElement("div");
         el.className="day";
         el.innerText=d;
-        const full=`${d}/${m+1}/${y}`;
-        if(reservations.some(r=>r.date===full)){
-            el.classList.add("blocked");
-        }
-        el.onmouseover=()=>{ if(!el.classList.contains("blocked")) el.style.color="#000"; };
-        el.onmouseout=()=>{ if(!el.classList.contains("blocked") && !el.classList.contains("selected")) el.style.color="#555"; };
+        el.onmouseover=()=>{ el.style.color="#000"; };
+        el.onmouseout=()=>{ if(!el.classList.contains("selected")) el.style.color="#555"; };
         el.onclick=()=>{
-            if(el.classList.contains("blocked")) return;
             document.querySelectorAll(".day").forEach(e=>{ e.classList.remove("selected"); e.style.color="#555"; });
             el.classList.add("selected");
-            selectedDate = full;
-            el.style.color="#fff";
-            renderHours();
+            selectedDate = `${d}/${m+1}/${y}`;
+            renderHours(); // met à jour seulement les horaires déjà pris
         };
         cal.appendChild(el);
     }
@@ -209,8 +201,7 @@ Heure🕐: ${heure}`;
     document.querySelectorAll(".day.selected").forEach(e=>e.classList.remove("selected"));
     selectedDate=null;
     document.getElementById("heure").selectedIndex=0;
-    await renderCalendar();
-    await renderHours();
+    await renderHours(); // mise à jour après réservation
 };
 </script>
 </body>
