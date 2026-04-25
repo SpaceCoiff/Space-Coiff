@@ -30,7 +30,7 @@ header {
     box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* Logo haut */
+/* Logo */
 .logo {
     display:block;
     margin:0 auto 20px;
@@ -40,17 +40,26 @@ header {
 
 /* Form inputs */
 input, select {
-    width:100%;
-    padding:12px;
+    width:calc(100% - 20px); /* padding interne */
+    padding:10px;
     margin:8px 0;
     border-radius:12px;
     border:1px solid #000;
     transition:0.3s;
+    display:block;
 }
 input:focus, select:focus {
     border-color:#000;
     box-shadow:0 0 5px rgba(0,0,0,0.2);
     outline:none;
+}
+
+/* Labels pour sections */
+.section-title {
+    font-weight:bold;
+    margin-top:15px;
+    margin-bottom:5px;
+    display:block;
 }
 
 /* Buttons services */
@@ -69,15 +78,8 @@ input:focus, select:focus {
     cursor:pointer;
     transition: all 0.3s ease;
 }
-.option:hover {
-    background:#000;
-    color:#fff;
-}
-.option.active {
-    background:#000;
-    color:#fff;
-    transform:scale(1.05);
-}
+.option:hover { background:#000; color:#fff; }
+.option.active { background:#000; color:#fff; transform:scale(1.05); }
 
 /* Calendar */
 .calendar-header {
@@ -95,9 +97,7 @@ input:focus, select:focus {
     cursor:pointer;
     transition:all 0.3s ease;
 }
-.calendar-header button:hover {
-    background:#bbb;
-}
+.calendar-header button:hover { background:#bbb; }
 .calendar-grid {
     display:grid;
     grid-template-columns:repeat(7,1fr);
@@ -150,6 +150,7 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 <button class="option">Soins</button>
 </div>
 
+<span class="section-title">Choisissez une date :</span>
 <div class="calendar-header">
 <button onclick="prevMonth()">◀️</button>
 <strong id="monthLabel"></strong>
@@ -157,6 +158,7 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 </div>
 <div id="calendar" class="calendar-grid"></div>
 
+<span class="section-title">Horaires :</span>
 <select id="heure">
 <option>09:00</option><option>10:00</option><option>11:00</option>
 <option>12:00</option><option>14:00</option><option>16:00</option>
@@ -182,9 +184,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Services toggle
-document.querySelectorAll(".option").forEach(btn=>{
-    btn.onclick=()=> btn.classList.toggle("active");
-});
+document.querySelectorAll(".option").forEach(btn=>{ btn.onclick=()=> btn.classList.toggle("active"); });
 
 // Calendar
 let currentDate = new Date();
@@ -285,6 +285,7 @@ Heure: ${heure}`;
         nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date()
     });
 
+    // Reset
     document.getElementById("nom").value="";
     document.getElementById("prenom").value="";
     document.getElementById("email").value="";
