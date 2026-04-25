@@ -99,16 +99,17 @@ let selectedDate = null;
 const months=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 const horaires = ["09:00","09:30,"10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"];
 
+// Charger toutes les réservations depuis Firebase
 async function loadReservations(){ 
     const res = await getDocs(collection(db,"reservations"));
     return res.docs.map(doc=>doc.data());
 }
 
-// Fonction pour mettre à jour uniquement les horaires déjà pris pour la date sélectionnée
+// Mettre à jour les horaires avec blocage uniquement pour la date sélectionnée
 async function renderHours(){ 
     const heureSelect = document.getElementById("heure");
-    heureSelect.innerHTML="";
     const reservations = await loadReservations();
+    heureSelect.innerHTML = "";
     horaires.forEach(h=>{
         const option = document.createElement("option");
         option.value = h;
@@ -124,6 +125,7 @@ async function renderHours(){
     });
 }
 
+// Rendu du calendrier (aucun blocage global, toutes les dates visibles)
 async function renderCalendar(){
     const cal=document.getElementById("calendar");
     const label=document.getElementById("monthLabel");
@@ -144,7 +146,7 @@ async function renderCalendar(){
             document.querySelectorAll(".day").forEach(e=>{ e.classList.remove("selected"); e.style.color="#555"; });
             el.classList.add("selected");
             selectedDate = `${d}/${m+1}/${y}`;
-            renderHours(); // met à jour seulement les horaires déjà pris
+            renderHours();
         };
         cal.appendChild(el);
     }
@@ -153,6 +155,7 @@ async function renderCalendar(){
 window.nextMonth=()=>{ currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); };
 window.prevMonth=()=>{ currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); };
 
+// Initialisation
 await renderCalendar();
 await renderHours();
 
@@ -201,7 +204,7 @@ Heure🕐: ${heure}`;
     document.querySelectorAll(".day.selected").forEach(e=>e.classList.remove("selected"));
     selectedDate=null;
     document.getElementById("heure").selectedIndex=0;
-    await renderHours(); // mise à jour après réservation
+    await renderHours();
 };
 </script>
 </body>
