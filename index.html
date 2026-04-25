@@ -5,39 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Space Coiff - Réservation</title>
 <style>
-body { font-family: Arial; background:#f3f3f3; margin:0; }
-header { background:#000; color:#fff; text-align:center; padding:20px; font-weight:bold;}
-.container { max-width:400px; margin:20px auto; background:#fff; padding:20px; border-radius:20px; position:relative; }
+body {
+    font-family: 'Arial', sans-serif;
+    background:#f3f3f3;
+    margin:0;
+    padding:0;
+}
+header {
+    background:#000;
+    color:#fff;
+    text-align:center;
+    padding:20px 0;
+    font-weight:bold;
+    font-size:1.5em;
+}
 
-/* Logo en haut */
+.container {
+    max-width:400px;
+    margin:20px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:25px;
+    position:relative;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Logo haut */
 .logo {
     display:block;
-    margin:0 auto 15px;
+    margin:0 auto 20px;
     width:140px;
     height:auto;
 }
 
-input, select, button { width:100%; padding:10px; margin:5px 0; border-radius:10px; border:1px solid #ccc; }
-button.submit { background:#000; color:#fff; border:none; cursor:pointer; }
-
-.buttons { display:flex; gap:10px; flex-wrap:wrap; margin:5px 0; }
-.option {
-    padding:8px 12px;
-    border-radius:20px;
-    border:none;
-    background:#fff; /* blanc initial */
-    color:#000;       /* texte noir initial */
-    cursor:pointer;
+/* Form inputs */
+input, select {
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:12px;
+    border:1px solid #000;
+    transition:0.3s;
 }
-.option.active { background:#000; color:#fff; } /* noir + texte blanc après sélection */
+input:focus, select:focus {
+    border-color:#000;
+    box-shadow:0 0 5px rgba(0,0,0,0.2);
+    outline:none;
+}
 
-.calendar-header { display:flex; justify-content:space-between; align-items:center; margin:10px 0; }
-.calendar-header button { padding:5px 10px; font-size:0.9em; background:#ccc; border:none; cursor:pointer; color:#000; border-radius:5px; }
+/* Buttons services */
+.buttons {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:10px 0;
+}
+.option {
+    padding:10px 15px;
+    border-radius:25px;
+    border:2px solid #000;
+    background:#fff;
+    color:#000;
+    cursor:pointer;
+    transition: all 0.3s ease;
+}
+.option:hover {
+    background:#000;
+    color:#fff;
+}
+.option.active {
+    background:#000;
+    color:#fff;
+    transform:scale(1.05);
+}
 
-.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
-.day { padding:10px; text-align:center; border-radius:50%; cursor:pointer; }
-.day.selected { background:#000; color:#fff; }
-.day.blocked { background:#ccc; cursor:not-allowed; }
+/* Calendar */
+.calendar-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:15px 0;
+}
+.calendar-header button {
+    padding:6px 12px;
+    font-size:0.95em;
+    background:#ddd;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.3s ease;
+}
+.calendar-header button:hover {
+    background:#bbb;
+}
+.calendar-grid {
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+.day {
+    padding:12px;
+    text-align:center;
+    border-radius:50%;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    background:#f0f0f0;
+}
+.day:hover { background:#ddd; }
+.day.selected { background:#000; color:#fff; transform:scale(1.1);}
+.day.blocked { background:#ccc; cursor:not-allowed;}
+
+/* Submit button */
+button.submit {
+    background:#000;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-weight:bold;
+    margin-top:10px;
+    cursor:pointer;
+    transition:all 0.3s ease;
+}
+button.submit:hover { background:#222; transform:scale(1.02);}
 </style>
 </head>
 <body>
@@ -46,7 +136,6 @@ button.submit { background:#000; color:#fff; border:none; cursor:pointer; }
 
 <div class="container">
 
-<!-- Logo en haut -->
 <img src="logo_space_coiff.png" class="logo">
 
 <input id="nom" placeholder="Nom">
@@ -92,12 +181,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Services
+// Services toggle
 document.querySelectorAll(".option").forEach(btn=>{
     btn.onclick=()=> btn.classList.toggle("active");
 });
 
-// Calendrier
+// Calendar
 let currentDate = new Date();
 let selectedDate = null;
 let blockedDates = [];
@@ -188,17 +277,14 @@ Service: ${services}
 Date: ${selectedDate}
 Heure: ${heure}`;
 
-    // WhatsApp
     const waLink=document.getElementById("waLink");
     waLink.href=`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
     waLink.click();
 
-    // Firebase
     await addDoc(collection(db,"reservations"),{
         nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date()
     });
 
-    // Reset
     document.getElementById("nom").value="";
     document.getElementById("prenom").value="";
     document.getElementById("email").value="";
