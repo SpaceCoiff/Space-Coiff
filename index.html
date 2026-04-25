@@ -5,150 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Space Coiff - Réservation</title>
 <style>
-body {
-    font-family: 'Arial', sans-serif;
-    background:#f3f3f3;
-    margin:0;
-    padding:0;
-}
-header {
-    background:#000;
-    color:#fff;
-    text-align:center;
-    padding:20px 0;
-    font-weight:bold;
-    font-size:1.5em;
-}
-
-.container {
-    max-width:400px;
-    margin:20px auto;
-    background:#fff;
-    padding:25px;
-    border-radius:25px;
-    position:relative;
-    box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* Logo */
-.logo {
-    display:block;
-    margin:0 auto 20px;
-    width:140px;
-    height:auto;
-}
-
-/* Labels */
-label {
-    display:block;
-    font-weight:bold;
-    margin-top:10px;
-    margin-bottom:5px;
-}
-
-/* Inputs */
-input, select {
-    width:calc(100% - 20px);
-    padding:10px;
-    margin:5px 0;
-    border-radius:12px;
-    border:1px solid #000;
-    transition:0.3s;
-    display:block;
-}
-input:focus, select:focus {
-    border-color:#000;
-    box-shadow:0 0 5px rgba(0,0,0,0.2);
-    outline:none;
-}
-
-/* Buttons services */
-.buttons {
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:10px 0;
-}
-.option {
-    padding:10px 15px;
-    border-radius:25px;
-    border:2px solid #000;
-    background:#fff;
-    color:#000;
-    cursor:pointer;
-    transition: all 0.3s ease;
-}
+body { font-family: 'Arial', sans-serif; background:#f3f3f3; margin:0; padding:0; }
+header { background:#000; color:#fff; text-align:center; padding:20px 0; font-weight:bold; font-size:1.5em; }
+.container { max-width:400px; margin:20px auto; background:#fff; padding:25px; border-radius:25px; position:relative; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+.logo { display:block; margin:0 auto 20px; width:140px; height:auto; }
+label { display:block; font-weight:bold; margin-top:10px; margin-bottom:5px; }
+input, select { width:calc(100% - 20px); padding:10px; margin:5px 0; border-radius:12px; border:1px solid #000; transition:0.3s; display:block; }
+input:focus, select:focus { border-color:#000; box-shadow:0 0 5px rgba(0,0,0,0.2); outline:none; }
+.buttons { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+.option { padding:10px 15px; border-radius:25px; border:2px solid #000; background:#fff; color:#000; cursor:pointer; transition: all 0.3s ease; }
 .option:hover { background:#000; color:#fff; }
 .option.active { background:#000; color:#fff; transform:scale(1.05); }
-
-/* Calendar */
 .section-title { font-weight:bold; margin-top:15px; margin-bottom:5px; display:block; }
-.calendar-header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:15px 0;
-}
-.calendar-header button {
-    padding:6px 12px;
-    font-size:0.95em;
-    background:#ddd;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    transition:all 0.3s ease;
-}
+.calendar-header { display:flex; justify-content:space-between; align-items:center; margin:15px 0; }
+.calendar-header button { padding:6px 12px; font-size:0.95em; background:#ddd; border:none; border-radius:8px; cursor:pointer; transition:all 0.3s ease; }
 .calendar-header button:hover { background:#bbb; }
-
-.calendar-grid {
-    display:grid;
-    grid-template-columns: repeat(7,1fr);
-    gap:5px;
-}
-.calendar-grid .day {
-    padding:12px;
-    text-align:center;
-    border-radius:50%;
-    cursor:pointer;
-    transition:all 0.3s ease;
-    background:#f9f9f9;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
+.weekdays { display:grid; grid-template-columns: repeat(7,1fr); margin-bottom:5px; text-align:center; font-weight:bold; color:#555; }
+.calendar-grid { display:grid; grid-template-columns: repeat(7,1fr); gap:5px; }
+.calendar-grid .day { padding:12px; text-align:center; border-radius:50%; cursor:pointer; transition:all 0.3s ease; background:#f9f9f9; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 .calendar-grid .day:hover { background:#eee; transform:scale(1.05); }
-.calendar-grid .day.selected {
-    background:#000;
-    color:#fff;
-    transform:scale(1.15);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.calendar-grid .day.blocked {
-    background:#ccc;
-    cursor:not-allowed;
-    color:#666;
-}
-
-/* Weekdays header */
-.weekdays {
-    display:grid;
-    grid-template-columns: repeat(7,1fr);
-    margin-bottom:5px;
-    text-align:center;
-    font-weight:bold;
-    color:#555;
-}
-
-/* Submit button */
-button.submit {
-    background:#000;
-    color:#fff;
-    border:none;
-    border-radius:12px;
-    padding:12px;
-    font-weight:bold;
-    margin-top:10px;
-    cursor:pointer;
-    transition:all 0.3s ease;
-}
+.calendar-grid .day.selected { background:#000; color:#fff; transform:scale(1.15); box-shadow:0 4px 8px rgba(0,0,0,0.2); }
+.calendar-grid .day.blocked { background:#ccc; cursor:not-allowed; color:#666; }
+button.submit { background:#000; color:#fff; border:none; border-radius:12px; padding:12px; font-weight:bold; margin-top:10px; cursor:pointer; transition:all 0.3s ease; }
 button.submit:hover { background:#222; transform:scale(1.02);}
 </style>
 </head>
@@ -182,11 +60,9 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 <strong id="monthLabel"></strong>
 <button onclick="nextMonth()">▶️</button>
 </div>
-
 <div class="weekdays">
 <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
 </div>
-
 <div id="calendar" class="calendar-grid"></div>
 
 <span class="section-title">Horaires :</span>
@@ -205,15 +81,11 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyABAx8rHzrQDCx-DLjW0aVJsh1iA_SBadY",
-  authDomain: "space-coiff.firebaseapp.com",
-  projectId: "space-coiff"
-};
+const firebaseConfig = { apiKey:"AIzaSyABAx8rHzrQDCx-DLjW0aVJsh1iA_SBadY", authDomain:"space-coiff.firebaseapp.com", projectId:"space-coiff" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Services toggle
+// Services
 document.querySelectorAll(".option").forEach(btn=>{ btn.onclick=()=> btn.classList.toggle("active"); });
 
 // Calendar
@@ -221,7 +93,7 @@ let currentDate = new Date();
 let selectedDate = null;
 let blockedDates = [];
 let blockedHours = [];
-const months = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const months=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 
 async function loadBlockedDates(){
     blockedDates=[];
@@ -233,23 +105,18 @@ async function loadBlockedDates(){
 }
 
 async function updateHeuresBloquees(){
-    blockedHours = [];
+    blockedHours=[];
     if(!selectedDate) return;
     const res = await getDocs(collection(db,"reservations"));
     res.forEach(doc=>{
         const data = doc.data();
-        if(data.date === selectedDate) blockedHours.push(data.heure);
+        if(data.date===selectedDate) blockedHours.push(data.heure);
     });
     const heureSelect = document.getElementById("heure");
     for(let i=0;i<heureSelect.options.length;i++){
         const option = heureSelect.options[i];
-        if(blockedHours.includes(option.value)){
-            option.disabled=true;
-            option.style.color="#ccc";
-        } else {
-            option.disabled=false;
-            option.style.color="#000";
-        }
+        option.disabled = blockedHours.includes(option.value);
+        option.style.color = option.disabled ? "#ccc" : "#000";
     }
 }
 
@@ -259,20 +126,21 @@ function renderCalendar(){
     cal.innerHTML="";
     const y=currentDate.getFullYear();
     const m=currentDate.getMonth();
-    label.innerText=months[m]+" "+y;
+    label.innerText = months[m]+" "+y;
     const first=new Date(y,m,1).getDay();
     const days=new Date(y,m+1,0).getDate();
-    const start=first===0?6:first-1;
+    const start = first===0?6:first-1;
     for(let i=0;i<start;i++) cal.innerHTML+="<div></div>";
-    for(let d=1; d<=days; d++){
+    for(let d=1;d<=days;d++){
         const el=document.createElement("div");
         el.className="day";
         el.innerText=d;
         const full=`${d}/${m+1}/${y}`;
         el.onclick=()=>{
+            if(el.classList.contains("blocked")) return;
             document.querySelectorAll(".day").forEach(e=>e.classList.remove("selected"));
             el.classList.add("selected");
-            selectedDate=full;
+            selectedDate = full;
             updateHeuresBloquees();
         };
         cal.appendChild(el);
@@ -285,7 +153,7 @@ window.prevMonth=()=>{ currentDate.setMonth(currentDate.getMonth()-1); renderCal
 await loadBlockedDates();
 renderCalendar();
 
-// Réservation
+// Reservation
 window.reserver = async function(){
     const nom=document.getElementById("nom").value;
     const prenom=document.getElementById("prenom").value;
@@ -300,21 +168,20 @@ window.reserver = async function(){
     }
 
     const phone="212661137243";
-    const message=`Nouvelle réservation Space Coiff :
-Nom: ${nom} ${prenom}
-Tel: ${tel}
-Service: ${services}
-Date: ${selectedDate}
-Heure: ${heure}`;
+    const message=`Nouvelle réservation Space Coiff✅ :
+Nom👤: ${nom} ${prenom}
+Tel📞: ${tel}
+Service💇: ${services}
+Date📅: ${selectedDate}
+Heure🕐: ${heure}`;
 
     const waLink=document.getElementById("waLink");
     waLink.href=`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
     waLink.click();
 
-    await addDoc(collection(db,"reservations"),{
-        nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date()
-    });
+    await addDoc(collection(db,"reservations"),{ nom,prenom,email,tel,services,date:selectedDate,heure,createdAt:new Date() });
 
+    // Reset
     document.getElementById("nom").value="";
     document.getElementById("prenom").value="";
     document.getElementById("email").value="";
