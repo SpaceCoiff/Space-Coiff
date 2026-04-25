@@ -46,7 +46,7 @@ label {
     margin-bottom:5px;
 }
 
-/* Form inputs */
+/* Inputs */
 input, select {
     width:calc(100% - 20px);
     padding:10px;
@@ -82,6 +82,7 @@ input:focus, select:focus {
 .option.active { background:#000; color:#fff; transform:scale(1.05); }
 
 /* Calendar */
+.section-title { font-weight:bold; margin-top:15px; margin-bottom:5px; display:block; }
 .calendar-header {
     display:flex;
     justify-content:space-between;
@@ -98,22 +99,43 @@ input:focus, select:focus {
     transition:all 0.3s ease;
 }
 .calendar-header button:hover { background:#bbb; }
+
 .calendar-grid {
     display:grid;
-    grid-template-columns:repeat(7,1fr);
+    grid-template-columns: repeat(7,1fr);
     gap:5px;
 }
-.day {
+.calendar-grid .day {
     padding:12px;
     text-align:center;
     border-radius:50%;
     cursor:pointer;
     transition:all 0.3s ease;
-    background:#f0f0f0;
+    background:#f9f9f9;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
-.day:hover { background:#ddd; }
-.day.selected { background:#000; color:#fff; transform:scale(1.1);}
-.day.blocked { background:#ccc; cursor:not-allowed;}
+.calendar-grid .day:hover { background:#eee; transform:scale(1.05); }
+.calendar-grid .day.selected {
+    background:#000;
+    color:#fff;
+    transform:scale(1.15);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.calendar-grid .day.blocked {
+    background:#ccc;
+    cursor:not-allowed;
+    color:#666;
+}
+
+/* Weekdays header */
+.weekdays {
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+    margin-bottom:5px;
+    text-align:center;
+    font-weight:bold;
+    color:#555;
+}
 
 /* Submit button */
 button.submit {
@@ -128,12 +150,6 @@ button.submit {
     transition:all 0.3s ease;
 }
 button.submit:hover { background:#222; transform:scale(1.02);}
-.section-title {
-    font-weight:bold;
-    margin-top:15px;
-    margin-bottom:5px;
-    display:block;
-}
 </style>
 </head>
 <body>
@@ -166,6 +182,11 @@ button.submit:hover { background:#222; transform:scale(1.02);}
 <strong id="monthLabel"></strong>
 <button onclick="nextMonth()">▶️</button>
 </div>
+
+<div class="weekdays">
+<div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
+</div>
+
 <div id="calendar" class="calendar-grid"></div>
 
 <span class="section-title">Horaires :</span>
