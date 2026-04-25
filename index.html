@@ -98,9 +98,9 @@ document.querySelectorAll(".option").forEach(btn=>{ btn.onclick=()=> btn.classLi
 let currentDate = new Date();
 let selectedDate = null;
 const months=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-const horaires = ["09:00","09:30,"10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"];
+const horaires = ["10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"];
 
-async function loadBlockedDates(){ 
+async function loadReservations(){ 
     const res = await getDocs(collection(db,"reservations"));
     return res.docs.map(doc=>doc.data());
 }
@@ -108,7 +108,7 @@ async function loadBlockedDates(){
 async function renderHours(){ 
     const heureSelect = document.getElementById("heure");
     heureSelect.innerHTML="";
-    const reservations = await loadBlockedDates();
+    const reservations = await loadReservations();
     horaires.forEach(h=>{
         const option = document.createElement("option");
         option.value = h;
@@ -131,10 +131,10 @@ async function renderCalendar(){
     const y=currentDate.getFullYear();
     const m=currentDate.getMonth();
     label.innerText = months[m]+" "+y;
-    const first=new Date(y,m,1).getDay();/
+    const first=new Date(y,m,1).getDay();
     const days=new Date(y,m+1,0).getDate();
     const start = first===0?6:first-1;
-    const reservations = await loadBlockedDates();
+    const reservations = await loadReservations();
     for(let i=0;i<start;i++) cal.innerHTML+="<div></div>";
     for(let d=1; d<=days; d++){
         const el=document.createElement("div");
@@ -152,7 +152,7 @@ async function renderCalendar(){
             el.classList.add("selected");
             selectedDate = full;
             el.style.color="#fff";
-            renderHours(); // mise à jour des horaires bloqués
+            renderHours();
         };
         cal.appendChild(el);
     }
