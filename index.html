@@ -5,32 +5,171 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Space Coiff - Réservation</title>
 <style>
-body { font-family: 'Arial', sans-serif; background:#f3f3f3; margin:0; padding:0; }
-header { background:#000; color:#fff; text-align:center; padding:20px 0; font-weight:bold; font-size:1.5em; }
-.container { max-width:400px; margin:20px auto; background:#fff; padding:25px; border-radius:25px; position:relative; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
-.logo { display:block; margin:0 auto 10px; width:140px; height:auto; }
-.tagline { text-align:center; font-weight:bold; margin-bottom:20px; color:#333; font-size:1em; }
-label { display:block; font-weight:bold; margin-top:10px; margin-bottom:5px; }
-input, select { width:calc(100% - 20px); padding:10px; margin:5px 0; border-radius:12px; border:1px solid #000; transition:0.3s; display:block; }
-input:focus, select:focus { border-color:#000; box-shadow:0 0 5px rgba(0,0,0,0.2); outline:none; }
-.buttons { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
-.option { padding:10px 15px; border-radius:25px; border:2px solid #000; background:#fff; color:#000; cursor:pointer; transition: all 0.3s ease; }
-.option:hover { background:#000; color:#fff; }
-.option.active { background:#000; color:#fff; transform:scale(1.05); }
-.section-title { font-weight:bold; margin-top:15px; margin-bottom:5px; display:block; }
-.calendar-header { display:flex; justify-content:space-between; align-items:center; margin:15px 0; border:2px solid #000; border-radius:12px; padding:5px 10px; background:#fff; }
-.calendar-header button { padding:6px 12px; font-size:0.95em; background:#ddd; border:none; border-radius:8px; cursor:pointer; transition:all 0.3s ease; }
+body {
+    font-family: 'Arial', sans-serif;
+    background:#f3f3f3;
+    margin:0;
+    padding:0;
+}
+header {
+    background:#000;
+    color:#fff;
+    text-align:center;
+    padding:20px 0;
+    font-weight:bold;
+    font-size:1.5em;
+}
+.container {
+    max-width:450px;
+    margin:20px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:25px;
+    position:relative;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+.logo {
+    display:block;
+    margin:0 auto 10px;
+    width:150px;
+    height:auto;
+}
+.tagline {
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:25px;
+    color:#333;
+    font-size:1.1em;
+}
+label {
+    display:block;
+    font-weight:bold;
+    margin-top:15px;
+    margin-bottom:5px;
+    font-size:1em;
+}
+input, select {
+    width:calc(100% - 20px);
+    padding:14px;
+    margin:5px 0;
+    border-radius:15px;
+    border:1px solid #000;
+    font-size:1em;
+    transition:0.3s;
+}
+input:focus, select:focus {
+    border-color:#000;
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+    outline:none;
+}
+.buttons {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:15px 0;
+}
+.option {
+    padding:12px 18px;
+    border-radius:25px;
+    border:2px solid #000;
+    background:#fff;
+    color:#000;
+    cursor:pointer;
+    font-size:1em;
+    transition: all 0.3s ease;
+}
+.option:hover {
+    background:#000;
+    color:#fff;
+}
+.option.active {
+    background:#000;
+    color:#fff;
+    transform:scale(1.05);
+}
+.section-title {
+    font-weight:bold;
+    margin-top:20px;
+    margin-bottom:8px;
+    display:block;
+    font-size:1.1em;
+}
+.calendar-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:20px 0 10px 0;
+    border:2px solid #000;
+    border-radius:12px;
+    padding:8px 12px;
+    background:#fff;
+}
+.calendar-header button {
+    padding:8px 14px;
+    font-size:1em;
+    background:#ddd;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all 0.3s ease;
+}
 .calendar-header button:hover { background:#bbb; }
-.weekdays { display:grid; grid-template-columns: repeat(7,1fr); margin-bottom:5px; text-align:center; font-weight:bold; color:#555; }
-.calendar-grid { display:grid; grid-template-columns: repeat(7,1fr); gap:5px; }
-.calendar-grid .day { padding:12px; text-align:center; border-radius:50%; cursor:pointer; transition:all 0.3s ease; background:#f9f9f9; box-shadow:0 1px 2px rgba(0,0,0,0.1); }
+.weekdays {
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+    margin-bottom:5px;
+    text-align:center;
+    font-weight:bold;
+    color:#555;
+}
+.calendar-grid {
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+    gap:6px;
+}
+.calendar-grid .day {
+    padding:14px;
+    text-align:center;
+    border-radius:50%;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    background:#f9f9f9;
+    box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    font-size:1em;
+}
 .calendar-grid .day:hover { background:#eee; transform:scale(1.05); }
-.calendar-grid .day.selected { background:#000; color:#fff; transform:scale(1.15); box-shadow:0 4px 8px rgba(0,0,0,0.2); }
-.calendar-grid .day.blocked { background:#ccc; cursor:not-allowed; color:#666; }
-button.submit { background:#000; color:#fff; border:none; border-radius:15px; padding:18px; font-weight:bold; font-size:1.2em; margin-top:15px; cursor:pointer; transition:all 0.3s ease; width:100%; }
+.calendar-grid .day.selected { background:#000; color:#fff; transform:scale(1.15); box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+.calendar-grid .day.blocked { background:#ccc; cursor:not-allowed; color:#666;}
+button.submit {
+    background:#000;
+    color:#fff;
+    border:none;
+    border-radius:20px;
+    padding:18px;
+    font-weight:bold;
+    font-size:1.3em;
+    margin-top:20px;
+    cursor:pointer;
+    transition:all 0.3s ease;
+    width:100%;
+}
 button.submit:hover { background:#222; transform:scale(1.05);}
-#confirmation { display:none; margin-top:10px; padding:10px; background:#d4edda; color:#155724; border-radius:10px; font-weight:bold; text-align:center; }
-.error-message { color:red; font-size:0.85em; margin-top:2px; display:none; }
+#confirmation {
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    background:#d4edda;
+    color:#155724;
+    border-radius:12px;
+    font-weight:bold;
+    text-align:center;
+}
+.error-message {
+    color:red;
+    font-size:0.9em;
+    margin-top:3px;
+    display:none;
+}
 input.error, select.error { border-color:red !important; }
 </style>
 </head>
@@ -92,6 +231,7 @@ input.error, select.error { border-color:red !important; }
 </div>
 
 <script type="module">
+// Firebase config + imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -99,8 +239,10 @@ const firebaseConfig = { apiKey:"AIzaSyABAx8rHzrQDCx-DLjW0aVJsh1iA_SBadY", authD
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Services toggle
 document.querySelectorAll(".option").forEach(btn=>{ btn.onclick=()=> btn.classList.toggle("active"); });
 
+// Calendar
 let currentDate = new Date();
 let selectedDate = null;
 let blockedDates = [];
@@ -159,6 +301,7 @@ window.prevMonth=()=>{ currentDate.setMonth(currentDate.getMonth()-1); renderCal
 await loadBlockedDates();
 renderCalendar();
 
+// Validation
 function validateForm(){
     let valid = true;
     const nom = document.getElementById("nom");
@@ -176,6 +319,7 @@ function validateForm(){
     return valid;
 }
 
+// Reservation
 window.reserver = async function(){
     if(!validateForm()) return;
     const nom=document.getElementById("nom").value;
